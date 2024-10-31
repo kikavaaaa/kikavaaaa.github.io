@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temas de Programación - 6to Semestre</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #6f2cfb, #34d1bf);
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 150px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            color: #ffffff;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #ffffff;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, color 0.3s ease;
+            cursor: pointer;
+        }
+
+        h2:hover {
+            transform: scale(1.1);
+            color: #34d1bf;
+        }
+
+        button {
+            background: #34d1bf;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 209, 191, 0.4);
+        }
+
+        button:hover {
+            background: #2cbba5;
+            transform: translateY(-3px);
+        }
+
+        p {
+            font-size: 16px;
+            color: #f0f0f0;
+            line-height: 1.6;
+            margin-top: 10px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        a {
+            display: inline-block;
+            background: #6f2cfb;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 10px;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(111, 44, 251, 0.4);
+        }
+
+        a:hover {
+            background: #5a22f5;
+            transform: translateY(-3px);
+        }
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .navbar-toggle {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .navbar-menu {
+            display: none;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .navbar-menu.active {
+            display: flex;
+        }
+
+        .navbar-menu li {
+            margin-right: 20px;
+        }
+
+        .navbar-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navbar-logo {
+            height: 30px;
+            width: auto;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-toggle {
+                display: block;
+            }
+            
+            .navbar-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: rgba(0, 0, 0, 0.8);
+            }
+
+            .navbar-menu.active {
+                display: flex;
+            }
+
+            .navbar-menu li {
+                margin: 10px 0;
+            }
+        }
+  
+        .language-buttons {
+    position: absolute;
+    top: 65px; /* Bajé 7px más desde el valor original (20px) */
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.flag-button img {
+    width: 50px; /* Mantengo el tamaño reducido de las imágenes */
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.flag-button img:hover {
+    transform: scale(1.1); /* Efecto de agrandamiento al pasar el ratón */
+}
+
+
+.social-icons {
+    display: flex;
+    flex-direction: row; /* Alineación en fila */
+    justify-content: center; /* Centrar los íconos */
+    gap: 80px; /* Espacio entre los iconos */
+    margin-top: 20px;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #c987ff; /* Fondo oscuro para mayor elegancia */
+    padding: 10px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+}
+
+.social-icons a:hover {
+    background-color: #04e2ff36; /* Color del hover para el fondo */
+    transform: translateY(-5px); /* Animación de elevación */
+}
+
+.social-icons a i {
+    font-size: 24px; /* Tamaño más grande del ícono */
+}
+
+footer {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #692eff3d; /* Fondo más oscuro para el pie de página */
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    text-align: center;
+    font-size: 19px;
+}
+
+footer .social-icons {
+    margin-top: 10px;
+}
+  
+    </style>
+</head>
+<body>
+
+    <div class="language-buttons">
+        <a href="../../Proyecto_Programacion/6toSemestre/index.html" class="flag-button">
+            <img src="bandera_mexico.jpg" alt="Español" />
+        </a>        
+        <a href="../../Programming_Project/6thSemester/index.html" class="flag-button">
+            <img src="bandera_inglesa.jpg" alt="Inglés" />
+        </a>
+    </div>
+
+<nav class="navbar">
+    <div class="navbar-toggle" onclick="toggleNavbar()">Ξ</div>
+    <ul class="navbar-menu">
+        <li><a href="../2doSemestre/index.html">2do Semestre</a></li>
+        <li><a href="../3erSemestre/index.html">3er Semestre</a></li>
+        <li><a href="../4toSemestre/index.html">4to Semestre</a></li>
+        <li><a href="../5toSemestre/index.html">5to Semestre</a></li>
+        <li><a href="../6toSemestre/index.html">6to Semestre</a></li>
+        <li><a href="../Principal/index.html">Menu Principal</a></li>
+    </ul>
+    <img src="CecyLibro.gif" alt="Logo" class="navbar-logo">
+</nav>
+
+<img src="CecyLibro.gif" alt="Logo" class="logo">
+
+<h1>Desarrolla aplicaciones para dispositivos moviles.</h1>
+
+<div>
+    <h2 onclick="toggleInfo(0)">Desarrolla aplicaciones móviles para Android.</h2>
+    <button onclick="toggleInfo(0)">Ver Info</button>
+    <div id="info-0" style="display: none;">
+        <p>El desarrollo de aplicaciones móviles para Android es el proceso de crear software diseñado específicamente para funcionar en dispositivos que utilizan el sistema operativo Android.</p> 
+            <a href="pdfs/Apps_Moviles.pdf">Descargar PDF</a>
+        <a href="quiz.html">!Pon aprueba tus conocimientos!!!</a>
+    </div>
+</div>
+
+<div>
+    <h2 onclick="toggleInfo(1)">Desarrolla aplicaciones móviles para IOS</h2>
+    <button onclick="toggleInfo(1)">Ver Info</button>
+    <div id="info-1" style="display: none;">
+        <p>El desarrollo de aplicaciones móviles para iOS se refiere al proceso de crear software específicamente para dispositivos Apple que ejecutan el sistema operativo iOS, como iPhones y iPads.</p>
+        <a href="pdfs/Apps_Moviles.pdf">Descargar PDF</a>
+        <a href="quiz.html">!Pon aprueba tus conocimientos!!!</a>
+    </div>
+</div>
+
+<a href="../Juego_1/index.html">Te sientes Listo?
+    Contesta el examen de los 5 semestres de Programación
+</a>
+
+<script>
+    function toggleInfo(index) {
+        var infoDiv = document.getElementById('info-' + index);
+        if (infoDiv.style.display === 'none') {
+            infoDiv.style.display = 'block';
+        } else {
+            infoDiv.style.display = 'none';
+        }
+    }
+
+    function toggleNavbar() {
+        var menu = document.querySelector('.navbar-menu');
+        menu.classList.toggle('active');
+    }
+</script>
+
+<footer>
+    © Colegio De Estudios Cientificos y Tecnologicos del Estado de Mexico Plantel Almoloya de Juarez 2024
+    <div class="social-icons">
+        <a href="https://www.facebook.com/Cecytem.Almoloya" target="_blank"><i class="fab fa-facebook-f"></i> FACEBOOK</a>
+        <a href="https://x.com/somoscecytem" target="_blank"><i class="fab fa-x-twitter"></i> TWITTER</a>
+        <a href="https://www.instagram.com/somoscecytem/" target="_blank"><i class="fab fa-instagram"></i> INSTAGRAM</a>
+    </div>
+</footer>
+
+</body>
+</html>

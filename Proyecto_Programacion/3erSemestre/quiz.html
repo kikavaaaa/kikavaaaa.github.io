@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de POO y POE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #6f2cfb, #34d1bf);
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .logo {
+            max-width: 150px;
+            margin: 0 auto 30px;
+            display: block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .question.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .question h2 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .option.correct {
+            background: rgba(46, 213, 115, 0.3);
+            border-color: #2ed573;
+        }
+
+        .option.incorrect {
+            background: rgba(255, 71, 87, 0.3);
+            border-color: #ff4757;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        button {
+            background: #34d1bf;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 209, 191, 0.4);
+        }
+
+        button:hover {
+            background: #2cbba5;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .results {
+            text-align: center;
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .score {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .reminder {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: #34d1bf;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="CecyLibro.gif" alt="Logo" class="logo">
+        <div class="quiz-container">
+            <h1>Quiz de Programación Orientada a Objetos y Eventos</h1>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div id="quiz">
+                <!-- Las preguntas se generarán dinámicamente -->
+            </div>
+            <div class="results" id="results">
+                <h2>¡Quiz Completado!</h2>
+                <div class="score">Puntuación: <span id="score">0</span>/10</div>
+                <div class="reminder">
+                    Recuerda consultar los PDFs del curso para profundizar en los temas de POO y POE.
+                </div>
+                <button onclick="restartQuiz()">Intentar de nuevo</button>
+            </div>
+            <div class="controls">
+                <button id="prevBtn" onclick="previousQuestion()" disabled>Anterior</button>
+                <button id="nextBtn" onclick="nextQuestion()">Siguiente</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "¿Qué es la Programación Orientada a Objetos (POO)?",
+                options: [
+                    "Un paradigma que organiza el código en objetos con atributos y métodos",
+                    "Un lenguaje de programación",
+                    "Una herramienta de desarrollo",
+                    "Un tipo de base de datos"
+                ],
+                correct: 0
+            },
+            {
+                question: "¿Qué son los atributos en POO?",
+                options: [
+                    "Funciones del objeto",
+                    "Datos o características que definen al objeto",
+                    "Nombres de las clases",
+                    "Tipos de variables"
+                ],
+                correct: 1
+            },
+            {
+                question: "¿Qué es un método en POO?",
+                options: [
+                    "Un tipo de variable",
+                    "Una base de datos",
+                    "Una función o comportamiento del objeto",
+                    "Un atributo especial"
+                ],
+                correct: 2
+            },
+            {
+                question: "¿Qué es la Programación Orientada a Eventos (POE)?",
+                options: [
+                    "Un tipo de base de datos",
+                    "Un paradigma donde el flujo del programa está determinado por eventos",
+                    "Un lenguaje de programación",
+                    "Una herramienta de desarrollo"
+                ],
+                correct: 1
+            },
+            {
+                question: "¿Cuál de los siguientes es un ejemplo de evento?",
+                options: [
+                    "Una variable",
+                    "Una función",
+                    "Un clic del usuario",
+                    "Una clase"
+                ],
+                correct: 2
+            },
+            {
+                question: "¿Cuál es una ventaja de la POO?",
+                options: [
+                    "Es más difícil de mantener",
+                    "No permite la reutilización de código",
+                    "Hace el código más desorganizado",
+                    "Permite crear programas más organizados y reutilizables"
+                ],
+                correct: 3
+            },
+            {
+                question: "En POE, ¿qué es un evento?",
+                options: [
+                    "Una clase",
+                    "Una acción o suceso que el programa puede detectar y responder",
+                    "Un método",
+                    "Un atributo"
+                ],
+                correct: 1
+            },
+            {
+                question: "¿Cuál NO es un tipo común de evento en programación?",
+                options: [
+                    "Clic del mouse",
+                    "Pulsación de tecla",
+                    "Compilación del código",
+                    "Movimiento del mouse"
+                ],
+                correct: 2
+            },
+            {
+                question: "¿Qué característica define mejor a la POE?",
+                options: [
+                    "Programación secuencial",
+                    "Programación basada en respuestas a acciones",
+                    "Programación sin interfaces",
+                    "Programación sin usuarios"
+                ],
+                correct: 1
+            },
+            {
+                question: "¿Cuál es una aplicación común de la POE?",
+                options: [
+                    "Procesamiento por lotes",
+                    "Cálculos matemáticos simples",
+                    "Interfaces gráficas de usuario",
+                    "Programación de bajo nivel"
+                ],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = new Array(questions.length).fill(false);
+
+        function initQuiz() {
+            const quizContainer = document.getElementById('quiz');
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = `question ${index === 0 ? 'active' : ''}`;
+                questionDiv.innerHTML = `
+                    <h2>${index + 1}. ${q.question}</h2>
+                    <div class="options">
+                        ${q.options.map((option, i) => `
+                            <div class="option" onclick="selectOption(${index}, ${i})">${option}</div>
+                        `).join('')}
+                    </div>
+                `;
+                quizContainer.appendChild(questionDiv);
+            });
+            updateProgress();
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            if (answered[questionIndex]) return;
+            
+            const questionDiv = document.querySelectorAll('.question')[questionIndex];
+            const options = questionDiv.querySelectorAll('.option');
+            const correct = questions[questionIndex].correct;
+
+            options[optionIndex].classList.add(optionIndex === correct ? 'correct' : 'incorrect');
+            if (optionIndex === correct) score++;
+            
+            answered[questionIndex] = true;
+            if (questionIndex === questions.length - 1) {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            const questions = document.querySelectorAll('.question');
+            questions[currentQuestion].classList.remove('active');
+            currentQuestion--;
+            questions[currentQuestion].classList.add('active');
+            updateNavButtons();
+            updateProgress();
+        }
+
+        function nextQuestion() {
+            const questions = document.querySelectorAll('.question');
+            questions[currentQuestion].classList.remove('active');
+            currentQuestion++;
+            questions[currentQuestion].classList.add('active');
+            updateNavButtons();
+            updateProgress();
+        }
+
+        function updateNavButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').disabled = currentQuestion === questions.length - 1;
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+        }
+
+        function showResults() {
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('results').classList.add('active');
+            document.getElementById('score').textContent = score;
+            document.querySelector('.controls').style.display = 'none';
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answered = new Array(questions.length).fill(false);
+            document.getElementById('quiz').style.display = 'block';
+            document.getElementById('results').classList.remove('active');
+            document.querySelector('.controls').style.display = 'flex';
+            
+            const questions = document.querySelectorAll('.question');
+            questions.forEach((q, i) => {
+                q.classList.remove('active');
+                if (i === 0) q.classList.add('active');
+                
+                const options = q.querySelectorAll('.option');
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                });
+            });
+            
+            updateNavButtons();
+            updateProgress();
+        }
+
+        initQuiz();
+    </script>
+</body>
+</html>

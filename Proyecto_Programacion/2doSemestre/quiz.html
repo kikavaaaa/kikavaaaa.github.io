@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conceptos de Programación - Unir Puntos</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6f2cfb, #34d1bf);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        
+        .logo {
+            max-width: 150px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        canvas {
+            background: white;
+            border-radius: 10px;
+            margin: 20px;
+        }
+
+        .controls {
+            margin: 20px;
+            text-align: center;
+        }
+
+        button {
+            background: #34d1bf;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background: #2cbba5;
+        }
+
+        #level {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        #concept-description {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        footer {
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <img src="CecyLibro.gif" alt="Logo" class="logo">
+    
+    <div class="game-container">
+        <div id="level">Nivel 1: Algoritmos</div>
+        <div id="concept-description">
+            Une los puntos para completar el concepto de programación
+        </div>
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <div class="controls">
+            <button onclick="resetLevel()">Reiniciar Nivel</button>
+            <button onclick="checkSolution()">Verificar</button>
+        </div>
+    </div>
+
+    <footer>© Colegio De Estudios Cientificos y Tecnologicos del Estado de Mexico Plantel Almoloya de Juarez 2024</footer>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentLevel = 1;
+        let points = [];
+        let connections = [];
+        let isDragging = false;
+        let startPoint = null;
+        let mousePos = { x: 0, y: 0 };
+
+        const levels = [
+            // Nivel 1: Algoritmo (forma de diagrama de flujo)
+            {
+                title: "Nivel 1: Algoritmos",
+                description: "Une los puntos para formar un diagrama de flujo básico. Los algoritmos son secuencias de pasos ordenados para resolver problemas.",
+                points: [
+                    { x: 200, y: 50 },  // Inicio
+                    { x: 200, y: 150 }, // Proceso
+                    { x: 200, y: 250 }, // Decisión
+                    { x: 100, y: 350 }, // Salida 1
+                    { x: 300, y: 350 }  // Salida 2
+                ],
+                solution: [[0,1], [1,2], [2,3], [2,4]]
+            },
+            // Nivel 2: Estructura de Control (If-Else)
+            {
+                title: "Nivel 2: Estructuras de Control",
+                description: "Construye una estructura IF-ELSE conectando los puntos. Las estructuras de control determinan el flujo del programa.",
+                points: [
+                    { x: 200, y: 50 },  // Inicio
+                    { x: 100, y: 150 }, // IF
+                    { x: 300, y: 150 }, // ELSE
+                    { x: 200, y: 250 }, // Fin
+                ],
+                solution: [[0,1], [1,2], [2,3]]
+            },
+            // Nivel 3: Estructura de Datos (Array)
+            {
+                title: "Nivel 3: Estructura de Datos",
+                description: "Crea un array conectando los elementos. Las estructuras de datos organizan la información de manera eficiente.",
+                points: [
+                    { x: 100, y: 200 }, // índice 0
+                    { x: 200, y: 200 }, // índice 1
+                    { x: 300, y: 200 }, // índice 2
+                    { x: 200, y: 100 }, // referencia
+                ],
+                solution: [[0,1], [1,2], [2,3]]
+            }
+        ];
+
+        function initLevel() {
+            points = [...levels[currentLevel-1].points];
+            connections = [];
+            document.getElementById('level').textContent = levels[currentLevel-1].title;
+            document.getElementById('concept-description').textContent = levels[currentLevel-1].description;
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Dibujar conexiones
+            ctx.beginPath();
+            ctx.strokeStyle = '#2cbba5';
+            ctx.lineWidth = 3;
+            connections.forEach(conn => {
+                ctx.moveTo(points[conn[0]].x, points[conn[0]].y);
+                ctx.lineTo(points[conn[1]].x, points[conn[1]].y);
+            });
+            ctx.stroke();
+
+            // Dibujar línea actual si está arrastrando
+            if (isDragging && startPoint) {
+                ctx.beginPath();
+                ctx.strokeStyle = '#6f2cfb';
+                ctx.moveTo(startPoint.x, startPoint.y);
+                ctx.lineTo(mousePos.x, mousePos.y);
+                ctx.stroke();
+            }
+
+            // Dibujar puntos con etiquetas
+            points.forEach((point, index) => {
+                // Dibujar punto
+                ctx.beginPath();
+                ctx.fillStyle = '#6f2cfb';
+                ctx.arc(point.x, point.y, 10, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Añadir etiqueta
+                ctx.fillStyle = '#000';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                let label = '';
+                switch(currentLevel) {
+                    case 1:
+                        label = ['Inicio', 'Proceso', 'Decisión', 'Salida 1', 'Salida 2'][index];
+                        break;
+                    case 2:
+                        label = ['Inicio', 'IF', 'ELSE', 'Fin'][index];
+                        break;
+                    case 3:
+                        label = ['[0]', '[1]', '[2]', 'Array'][index];
+                        break;
+                }
+                ctx.fillText(label, point.x, point.y - 15);
+            });
+        }
+
+        function getClosestPoint(x, y) {
+            let closest = null;
+            let minDist = 20;
+            points.forEach((point, index) => {
+                const dist = Math.sqrt((point.x - x) ** 2 + (point.y - y) ** 2);
+                if (dist < minDist) {
+                    closest = { ...point, index };
+                    minDist = dist;
+                }
+            });
+            return closest;
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const point = getClosestPoint(x, y);
+            
+            if (point) {
+                isDragging = true;
+                startPoint = point;
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mousePos.x = e.clientX - rect.left;
+            mousePos.y = e.clientY - rect.top;
+            if (isDragging) {
+                draw();
+            }
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (isDragging && startPoint) {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const endPoint = getClosestPoint(x, y);
+                
+                if (endPoint && endPoint.index !== startPoint.index) {
+                    const connection = [startPoint.index, endPoint.index].sort();
+                    if (!connections.some(conn => 
+                        conn[0] === connection[0] && conn[1] === connection[1])) {
+                        connections.push(connection);
+                    }
+                }
+            }
+            isDragging = false;
+            startPoint = null;
+            draw();
+        });
+
+        function checkSolution() {
+            const currentSolution = levels[currentLevel-1].solution;
+            const sortedConnections = connections.map(conn => [...conn].sort());
+            
+            const isCorrect = currentSolution.every(solConn => 
+                sortedConnections.some(conn => 
+                    conn[0] === solConn[0] && conn[1] === solConn[1]
+                )
+            ) && sortedConnections.length === currentSolution.length;
+
+            if (isCorrect) {
+                alert('¡Correcto! Has comprendido este concepto de programación.');
+                if (currentLevel < levels.length) {
+                    currentLevel++;
+                    initLevel();
+                } else {
+                    alert('¡Felicidades! Has completado todos los conceptos básicos de programación');
+                    currentLevel = 1;
+                    initLevel();
+                }
+            } else {
+                alert('Intenta de nuevo. Revisa el concepto y vuelve a intentarlo.');
+            }
+        }
+
+        function resetLevel() {
+            initLevel();
+        }
+
+        // Iniciar el juego
+        initLevel();
+    </script>
+</body>
+</html>

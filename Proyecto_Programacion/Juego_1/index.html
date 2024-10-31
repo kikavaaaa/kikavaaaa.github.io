@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen de Programación</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6f2cfb, #34d1bf);
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            padding: 50px;
+            text-align: center;
+        }
+    
+        .logo {
+            max-width: 150px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+    
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    
+        h1 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            color: #ffffff;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+    
+        .question-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+    
+        .question-container p {
+            font-size: 18px;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+    
+        .question-container label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+    
+        .question-container label:hover {
+            transform: translateX(5px);
+        }
+    
+        .question-container input[type="radio"] {
+            margin-right: 10px;
+        }
+    
+        .btn-submit {
+            background: #34d1bf;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 209, 191, 0.4);
+            cursor: pointer;
+        }
+    
+        .btn-submit:hover {
+            background: #2cbba5;
+            transform: translateY(-3px);
+        }
+    
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+        }
+    
+        .passed {
+            background-color: rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+        }
+    
+        .failed {
+            background-color: rgba(244, 67, 54, 0.3);
+            color: #F44336;
+        }
+    
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+    
+        .navbar-toggle {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    
+        .navbar-menu {
+            display: none;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+    
+        .navbar-menu.active {
+            display: flex;
+        }
+    
+        .navbar-menu li {
+            margin-right: 20px;
+        }
+    
+        .navbar-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    
+        .navbar-logo {
+            height: 30px;
+            width: auto;
+        }
+    
+        @media (min-width: 768px) {
+            .navbar-toggle {
+                display: none;
+            }
+            
+            .navbar-menu {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+
+        <img src="CecyLibro.gif" alt="Logo" class="navbar-logo">
+    </nav>
+    
+    <img src="CecyLibro.gif" alt="Logo" class="logo">
+
+    <h1>Examen de Programación</h1>
+    <div id="quiz"></div>
+    <button class="btn-submit" onclick="calcularResultado()">Enviar respuestas</button>
+    <div id="resultado" class="result"></div>
+
+    <script>
+    const preguntas = [
+        // 2do Semestre: Desarrolla Software de Aplicación Con Programación Estructurada
+        {
+            "pregunta": "¿Qué es un algoritmo?",
+            "opciones": [
+                "Un lenguaje de programación",
+                "Un conjunto de instrucciones bien definidas para resolver un problema",
+                "Un tipo de computadora",
+                "Una ecuación matemática"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Cuál de las siguientes NO es un tipo de estructura de control?",
+            "opciones": [
+                "Condicional",
+                "Bucle",
+                "Función",
+                "Base de datos"
+            ],
+            "respuesta": 3
+        },
+        {
+            "pregunta": "¿Qué hace la declaración 'if' en programación?",
+            "opciones": [
+                "Repite un bloque de código",
+                "Define una función",
+                "Ejecuta código basado en una condición",
+                "Declara una variable"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Qué bucle está garantizado que se ejecute al menos una vez?",
+            "opciones": [
+                "Bucle for",
+                "Bucle while",
+                "Bucle do-while",
+                "Bucle if-else"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Qué es una estructura de datos?",
+            "opciones": [
+                "Un paradigma de programación",
+                "Una forma de organizar y almacenar datos eficientemente",
+                "Un tipo de memoria de computadora",
+                "Una herramienta de depuración"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Cuál de estos NO es una estructura de datos común?",
+            "opciones": [
+                "Array",
+                "Lista enlazada",
+                "Árbol",
+                "Teclado"
+            ],
+            "respuesta": 3
+        },
+        {
+            "pregunta": "¿Cuál es el propósito de una declaración 'switch'?",
+            "opciones": [
+                "Definir una función",
+                "Crear un bucle",
+                "Manejar múltiples condiciones basadas en una sola variable",
+                "Conectar a una base de datos"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "En programación, ¿a qué se refiere 'iteración'?",
+            "opciones": [
+                "Declarar variables",
+                "Repetir un conjunto de instrucciones",
+                "Compilar código",
+                "Depurar errores"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Cuál es el propósito principal de los diagramas de flujo en programación?",
+            "opciones": [
+                "Escribir código",
+                "Representar visualmente la lógica de un algoritmo",
+                "Crear una interfaz de usuario",
+                "Almacenar datos"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Cuál de estas es una característica de la programación estructurada?",
+            "opciones": [
+                "Usar solo declaraciones 'goto'",
+                "Escribir todo el código en una gran función",
+                "Dividir los programas en funciones más pequeñas y manejables",
+                "Evitar el uso de variables"
+            ],
+            "respuesta": 2
+        },
+
+        // 3er Semestre: Aplica metodologías de desarrollo de software con herramientas de programación visual
+        {
+            "pregunta": "¿Qué es la Programación Orientada a Objetos (POO)?",
+            "opciones": [
+                "Un tipo de computadora",
+                "Un paradigma de programación que organiza el código en objetos",
+                "Un método para ordenar datos",
+                "Una forma de diseñar interfaces de usuario"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Cuál de estos NO es un concepto fundamental de POO?",
+            "opciones": [
+                "Encapsulación",
+                "Herencia",
+                "Polimorfismo",
+                "Fragmentación"
+            ],
+            "respuesta": 3
+        },
+        {
+            "pregunta": "En POO, ¿qué es una clase?",
+            "opciones": [
+                "Un tipo de bucle",
+                "Un plano para crear objetos",
+                "Un método para ordenar datos",
+                "Una estructura de control"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Qué es un evento en programación?",
+            "opciones": [
+                "Una función que siempre se ejecuta",
+                "Un error en el código",
+                "Una acción que desencadena una respuesta en el programa",
+                "Un tipo de variable"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Cuál es una ventaja de la Programación Orientada a Eventos?",
+            "opciones": [
+                "Usa menos memoria",
+                "Es más rápida que otros paradigmas",
+                "Permite crear interfaces de usuario más interactivas",
+                "No requiere un lenguaje de programación"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Qué es un 'listener' en la programación orientada a eventos?",
+            "opciones": [
+                "Un tipo de variable",
+                "Una función que espera y responde a eventos específicos",
+                "Un error en el código",
+                "Un tipo de bucle"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "En Java, ¿qué palabra clave se usa para crear una nueva instancia de una clase?",
+            "opciones": [
+                "create",
+                "instance",
+                "new",
+                "make"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Qué es la sobrecarga de métodos en POO?",
+            "opciones": [
+                "Un error que ocurre cuando un método tiene demasiados parámetros",
+                "La capacidad de definir múltiples métodos con el mismo nombre pero diferentes parámetros",
+                "Un método que se ejecuta automáticamente",
+                "Una técnica para optimizar el rendimiento del código"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Qué es un constructor en POO?",
+            "opciones": [
+                "Un método especial para destruir objetos",
+                "Una variable que contiene el estado del objeto",
+                "Un método especial para crear e inicializar un objeto",
+                "Una función que compila el código"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Cuál es el propósito principal de la encapsulación en POO?",
+            "opciones": [
+                "Hacer el código más rápido",
+                "Ocultar los detalles internos de un objeto y proteger sus datos",
+                "Crear más objetos",
+                "Permitir que cualquier parte del programa acceda a los datos del objeto"
+            ],
+            "respuesta": 1
+        },
+
+        // 4to Semestre: Desarrolla aplicaciones Web
+        {
+            "pregunta": "¿Qué significa HTML?",
+            "opciones": [
+                "Hyper Text Markup Language",
+                "High Tech Modern Language",
+                "Hyper Transfer Markup Logic",
+                "Home Tool Markup Language"
+            ],
+            "respuesta": 0
+        },
+        {
+            "pregunta": "¿Cuál es la función principal de JavaScript en el desarrollo web?",
+            "opciones": [
+                "Definir el estilo de la página web",
+                "Crear la estructura de la página web",
+                "Añadir interactividad y dinamismo a las páginas web",
+                "Gestionar la base de datos del sitio web"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Qué es PHP?",
+            "opciones": [
+                "Un lenguaje de marcado",
+                "Un lenguaje de programación del lado del servidor",
+                "Un sistema de gestión de bases de datos",
+                "Un framework de JavaScript"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Cuál es la diferencia principal entre JavaScript y PHP?",
+            "opciones": [
+                "JavaScript se ejecuta en el navegador, PHP en el servidor",
+                "JavaScript es más nuevo que PHP",
+                "PHP es más rápido que JavaScript",
+                "JavaScript solo se usa para animaciones, PHP para todo lo demás"
+            ],
+            "respuesta": 0
+        },
+        {
+            "pregunta": "¿Qué es CSS?",
+            "opciones": [
+                "Un lenguaje de programación",
+                "Un sistema de gestión de contenidos",
+                "Un lenguaje de estilo usado para describir la presentación de un documento",
+                "Una base de datos"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Qué es un selector en CSS?",
+            "opciones": [
+                "Una función de JavaScript",
+                "Un tipo de variable en PHP",
+                "Un patrón usado para seleccionar los elementos que quieres estilizar",
+                "Un método para conectar con una base de datos"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Qué es AJAX?",
+            "opciones": [
+                "Un nuevo lenguaje de programación",
+                "Una técnica para crear aplicaciones web interactivas",
+                "Un tipo de base de datos",
+                "Un framework de PHP"
+            ],
+            "respuesta": 1
+        },
+       {
+    "pregunta": "¿Qué significa API?",
+    "opciones": [
+        "Application Programming Interface",
+        "Advanced Programming Integration",
+        "Application Performance Index",
+        "Automated Programming Interface"
+    ],
+    "respuesta": 0
+},
+
+        {
+            "pregunta": "¿Qué es un framework en desarrollo web?",
+            "opciones": [
+                "Una plantilla para diseñar sitios web",
+                "Un conjunto de herramientas y bibliotecas que facilitan el desarrollo de aplicaciones web",
+                "Un lenguaje de programación",
+                "Una técnica para almacenar datos en el servidor"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Cuál es el propósito principal de una base de datos en una aplicación web?",
+            "opciones": [
+                "Estilizar el contenido de la página",
+                "Almacenar y gestionar los datos de la aplicación",
+                "Optimizar la velocidad del sitio web",
+                "Crear la estructura básica de la página"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Qué es un servidor web?",
+            "opciones": [
+                "Un servicio de almacenamiento en la nube",
+                "Un programa que entrega contenido web a los usuarios",
+                "Una base de datos para guardar datos web",
+                "Un lenguaje de programación"
+            ],
+            "respuesta": 1
+        },
+
+        // 5to Semestre: Desarrolla aplicaciones con bases de datos
+        {
+            "pregunta": "¿Qué es SQL?",
+            "opciones": [
+                "Un lenguaje de programación",
+                "Un lenguaje de consulta estructurado para gestionar bases de datos",
+                "Un sistema operativo",
+                "Una tecnología de almacenamiento en la nube"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Cuál de las siguientes NO es una operación básica de bases de datos?",
+            "opciones": [
+                "Insertar",
+                "Actualizar",
+                "Eliminar",
+                "Compilar"
+            ],
+            "respuesta": 3
+        },
+        {
+            "pregunta": "¿Qué significa 'SELECT' en SQL?",
+            "opciones": [
+                "Borrar datos de una tabla",
+                "Recuperar datos de una base de datos",
+                "Insertar datos en una tabla",
+                "Actualizar datos en una tabla"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Qué es una clave primaria en bases de datos?",
+            "opciones": [
+                "Una columna que contiene solo números",
+                "Una columna que identifica de manera única cada fila en una tabla",
+                "Una tabla que se usa para relaciones externas",
+                "Una función de búsqueda en SQL"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Qué es una relación de uno a muchos en una base de datos?",
+            "opciones": [
+                "Una relación en la que una fila de una tabla está relacionada con una sola fila de otra tabla",
+                "Una relación en la que una fila de una tabla puede estar relacionada con múltiples filas de otra tabla",
+                "Una relación en la que muchas filas de una tabla están relacionadas con muchas filas de otra tabla",
+                "Una relación en la que una tabla tiene una sola columna"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Qué es una consulta en una base de datos?",
+            "opciones": [
+                "Un proceso para respaldar la base de datos",
+                "Una solicitud de información o datos a la base de datos",
+                "Un tipo de dato en SQL",
+                "Una herramienta de diseño de bases de datos"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Qué es una transacción en bases de datos?",
+            "opciones": [
+                "Una operación de copia de seguridad de la base de datos",
+                "Un conjunto de operaciones que se realizan como una unidad indivisible",
+                "Un proceso de depuración de datos",
+                "Un tipo de tabla en SQL"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Qué comando SQL se utiliza para actualizar datos en una base de datos?",
+            "opciones": [
+                "SELECT",
+                "UPDATE",
+                "INSERT",
+                "DELETE"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Qué es una tabla en una base de datos?",
+            "opciones": [
+                "Un archivo de texto que contiene datos",
+                "Una estructura que organiza los datos en filas y columnas",
+                "Una lista de comandos SQL",
+                "Un programa que maneja consultas"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Cuál es el propósito de una clave foránea en una base de datos?",
+            "opciones": [
+                "Evitar la duplicación de datos",
+                "Garantizar que todas las filas tengan un valor único",
+                "Establecer una relación entre dos tablas",
+                "Eliminar filas duplicadas"
+            ],
+            "respuesta": 2
+        },
+        
+        {
+            "pregunta": "¿Cuál es el propósito de una clave foránea en una base de datos?",
+            "opciones": [
+                "Evitar la duplicación de datos",
+                "Garantizar que todas las filas tengan un valor único",
+                "Establecer una relación entre dos tablas",
+                "Eliminar filas duplicadas"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Qué lenguaje de programación es nativo para el desarrollo de aplicaciones iOS?",
+            "opciones": [
+                "Java",
+                "Swift",
+                "Kotlin",
+                "Python"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Cuál es el entorno de desarrollo integrado (IDE) oficial para Android?",
+            "opciones": [
+                "Xcode",
+                "Visual Studio",
+                "Android Studio",
+                "Eclipse"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Qué es un 'layout' en el desarrollo de aplicaciones móviles?",
+            "opciones": [
+                "Un archivo de base de datos",
+                "La estructura visual de la interfaz de usuario",
+                "Un archivo de configuración",
+                "Un tipo de variable"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Qué framework permite desarrollar aplicaciones móviles multiplataforma?",
+            "opciones": [
+                "React Native",
+                "Spring Boot",
+                "Django",
+                "Laravel"
+            ],
+            "respuesta": 0
+        },
+        {
+            "pregunta": "¿Qué es el 'manifest' en una aplicación Android?",
+            "opciones": [
+                "Un archivo de estilos",
+                "Una base de datos local",
+                "Un archivo que describe las características fundamentales de la app",
+                "Un componente de la interfaz de usuario"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Qué es un 'ViewController' en iOS?",
+            "opciones": [
+                "Una base de datos",
+                "Un controlador que maneja la lógica de la vista",
+                "Un componente de red",
+                "Un sistema de archivos"
+            ],
+            "respuesta": 1
+        },
+        {
+            "pregunta": "¿Qué es 'Gradle' en el desarrollo Android?",
+            "opciones": [
+                "Una biblioteca de interfaz de usuario",
+                "Un sistema de base de datos",
+                "Un sistema de construcción automatizado",
+                "Un emulador de Android"
+            ],
+            "respuesta": 2
+        },
+        {
+            "pregunta": "¿Qué es 'CocoaPods' en el desarrollo iOS?",
+            "opciones": [
+                "Un gestor de dependencias",
+                "Un framework de interfaz de usuario",
+                "Un sistema operativo",
+                "Un lenguaje de programación"
+            ],
+            "respuesta": 0
+        },
+        {
+            "pregunta": "¿Qué es un 'Intent' en Android?",
+            "opciones": [
+                "Un tipo de variable",
+                "Un mensaje para comunicar componentes",
+                "Una base de datos",
+                "Un elemento de interfaz"
+            ],
+            "respuesta": 1
+        }
+    ];
+
+        function mostrarPreguntas() {
+            const quizContainer = document.getElementById("quiz");
+            preguntas.forEach((preguntaObj, index) => {
+                const divPregunta = document.createElement("div");
+                divPregunta.classList.add("question-container");
+
+                const preguntaTexto = document.createElement("p");
+                preguntaTexto.innerHTML = (index + 1) + ". " + preguntaObj.pregunta;
+                divPregunta.appendChild(preguntaTexto);
+
+                preguntaObj.opciones.forEach((opcion, opcionIndex) => {
+                    const label = document.createElement("label");
+                    const input = document.createElement("input");
+                    input.type = "radio";
+                    input.name = "pregunta" + index;
+                    input.value = opcionIndex;
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(opcion));
+                    divPregunta.appendChild(label);
+                    divPregunta.appendChild(document.createElement("br"));
+                });
+
+                quizContainer.appendChild(divPregunta);
+            });
+        }
+
+        function calcularResultado() {
+            let respuestasCorrectas = 0;
+            preguntas.forEach((preguntaObj, index) => {
+                const opciones = document.getElementsByName("pregunta" + index);
+                opciones.forEach(opcion => {
+                    if (opcion.checked && parseInt(opcion.value) === preguntaObj.respuesta) {
+                        respuestasCorrectas++;
+                    }
+                });
+            });
+
+            const porcentaje = (respuestasCorrectas / preguntas.length) * 100;
+            const resultadoDiv = document.getElementById("resultado");
+            if (porcentaje >= 80) {
+                resultadoDiv.innerHTML = `¡Felicidades! Has pasado el examen con un ${porcentaje.toFixed(2)}% de aciertos.`;
+                resultadoDiv.classList.add("passed");
+                resultadoDiv.classList.remove("failed");
+            } else {
+                resultadoDiv.innerHTML = `Lo siento, has fallado el examen. Obtuviste un ${porcentaje.toFixed(2)}%.`;
+                resultadoDiv.classList.add("failed");
+                resultadoDiv.classList.remove("passed");
+            }
+        }
+
+        // Cargar preguntas al iniciar
+        window.onload = mostrarPreguntas;
+    </script>
+
+<script>
+    function toggleNavbar() {
+        const menu = document.querySelector('.navbar-menu');
+        menu.classList.toggle('active');
+    }
+    </script>
+
+<footer>© Colegio De Estudios Cientificos y Tecnologicos del Estado de México Plantel Almoloya de Juarez 2024</footer>
+
+</body>
+</html>

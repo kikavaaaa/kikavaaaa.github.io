@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudia Programación!</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6f2cfb, #34d1bf);
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            padding: 50px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .logo {
+            max-width: 150px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            color: #ffffff;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #ffffff;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, color 0.3s ease;
+            cursor: pointer;
+        }
+
+        h2:hover {
+            transform: scale(1.1);
+            color: #34d1bf;
+        }
+
+        .menu-item {
+            margin-bottom: 30px;
+        }
+
+        .menu-item img {
+            max-width: 200px;
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item img:hover {
+            transform: scale(1.3);
+        }
+
+        p {
+            font-size: 16px;
+            color: #f0f0f0;
+            line-height: 1.6;
+            margin-top: 10px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: justify; /* Justifica el texto */
+        }
+
+        /* Actualización de los estilos del navbar */
+.navbar {
+    background: linear-gradient(90deg, #2e1f6d 0%, #1a3a5c 100%);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: flex-end; /* Alinea los elementos a la derecha */
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-menu {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    gap: 15px; /* Espacio entre elementos */
+}
+
+.navbar-menu li {
+    margin: 0; /* Resetear el margen anterior */
+}
+
+.navbar-menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    background-color: #7c4dff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: block;
+}
+
+.navbar-menu a:hover {
+    background-color: #651fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.navbar-logo {
+    height: 40px;
+    margin-left: 20px;
+}
+/* Ajustes para el toggle del menú móvil */
+/* Añade o actualiza estos estilos en tu CSS */
+.navbar-toggle {
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    display: none;
+    margin-right: auto;
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+    .navbar-toggle {
+        display: block;
+    }
+    
+    .navbar-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #2e1f6d;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar-menu.active {
+        display: flex;
+    }
+
+    .navbar-menu li {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .navbar-menu a {
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+/* Ajuste para el padding del body debido al navbar fijo */
+body {
+    padding-top: 70px;
+}
+
+/* Ajuste para los botones de idioma */
+.language-buttons {
+    top: 85px; /* Ajustado para que no se solape con el navbar */
+}
+        .language-buttons {
+    position: absolute;
+    top: 65px; /* Bajé 7px más desde el valor original (20px) */
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.flag-button img {
+    width: 50px; /* Mantengo el tamaño reducido de las imágenes */
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.flag-button img:hover {
+    transform: scale(1.1); /* Efecto de agrandamiento al pasar el ratón */
+}
+
+
+.social-icons {
+    display: flex;
+    flex-direction: row; /* Alineación en fila */
+    justify-content: center; /* Centrar los íconos */
+    gap: 80px; /* Espacio entre los iconos */
+    margin-top: 20px;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #c987ff; /* Fondo oscuro para mayor elegancia */
+    padding: 10px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+}
+a{
+    padding: 10px 20px;
+}
+
+.social-icons a:hover {
+    background-color: #04e2ff36; /* Color del hover para el fondo */
+    transform: translateY(-5px); /* Animación de elevación */
+}
+
+.social-icons a i {
+    font-size: 24px; /* Tamaño más grande del ícono */
+}
+
+footer {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #692eff3d; /* Fondo más oscuro para el pie de página */
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    text-align: center;
+    font-size: 19px;
+}
+
+footer .social-icons {
+    margin-top: 10px;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="language-buttons">
+        <a href="../../Proyecto_Programacion/Principal/index.html" class="flag-button">
+            <img src="bandera_mexico.jpg" alt="Español" />
+        </a>        
+        <a href="../../Programming_Project/Main/index.html" class="flag-button">
+            <img src="bandera_inglesa.jpg" alt="Inglés" />
+        </a>
+    </div>
+
+    <nav class="navbar">
+        <div class="navbar-toggle" onclick="toggleNavbar()">Ξ</div>
+        <ul class="navbar-menu">
+            <li><a href="../2doSemestre/index.html">2do Semestre</a></li>
+        <li><a href="../3erSemestre/index.html">3er Semestre</a></li>
+        <li><a href="../4toSemestre/index.html">4to Semestre</a></li>
+        <li><a href="../5toSemestre/index.html">5to Semestre</a></li>
+        <li><a href="../6toSemestre/index.html">6to Semestre</a></li>
+        <li><a href="../Principal/index.html">Menu Principal</a></li>
+        </ul>
+        <img src="CecyLibro.gif" alt="Logo" class="navbar-logo">
+    </nav>
+
+    <img src="CecyLibro.gif"Logo" class="logo">
+    <h1>Estudia Programación!</h1>
+
+    <div class="menu-item">
+        <h2>Lenguajes de Programación</h2>
+        <p>Adéntrate en el fascinante mundo de los lenguajes de programación! Imagina que son las llaves mágicas que abren las puertas de la tecnología, permitiéndote comunicarte con las máquinas y darles vida a tus ideas más creativas. 
+            Los lenguajes de programación son como idiomas secretos que usan los magos modernos (¡los programadores!) para crear todo tipo de hechizos digitales: desde aplicaciones que usas a diario en tu teléfono, hasta los complejos sistemas que controlan satélites en el espacio. 
+            Cada lenguaje tiene su propia personalidad y superpoderes:
+
+            Algunos son rápidos y ágiles como un guepardo. 
+            Otros son fuertes y poderosos como un elefante. 
+            Y hay algunos tan versátiles que son como un camaleón, adaptándose a cualquier desafío.
+            <br>
+            ¿Te atreves a descubrir cuál de estos lenguajes mágicos se ajusta mejor a tu estilo y a los proyectos que sueñas crear? 
+            <br>
+            ¡El viaje apenas comienza!</p>
+        <img src="code_1.jpg" alt="Lenguajes de Programación">
+    </div>
+
+    <div class="menu-item">
+        <h2>Frameworks y Bibliotecas</h2>
+        <p>Embárcate en una aventura por el universo del desarrollo de software con las frameworks y bibliotecas! 
+            Imagina que estás construyendo el castillo de tus sueños digitales. Las frameworks son como planos mágicos ya diseñados, que te ofrecen una estructura sólida y probada para empezar. Te ahorran tiempo y esfuerzo, permitiéndote concentrarte en añadir tus toques personales y funcionalidades únicas. 
+            Las bibliotecas, por otro lado, son como cajas de herramientas encantadas. Están llenas de hechizos pre-escritos (funciones y código) que puedes usar para resolver problemas específicos o añadir características especiales a tu proyecto sin tener que reinventar la rueda.</p>
+        <img src="frameworks.jpg" alt="Frameworks y Bibliotecas">
+    </div>
+
+    <div class="menu-item">
+        <h2>Herramientas de Desarrollo</h2>
+        <p>Las Herramientas de Desarrollo son el arsenal secreto de todo programador moderno. Imagínalas como un laboratorio de alta tecnología equipado con dispositivos asombrosos que potencian tus habilidades de creación digital. 
+            Estas herramientas son como los superpoderes de los desarrolladores:
+
+            1.-IDEs (Entornos de Desarrollo Integrado): Son como centros de comando personalizados. Piensa en ellos como la Batcueva de Batman, pero para código. Te ofrecen todo lo que necesitas en un solo lugar.
+            <br>
+            2.-Sistemas de Control de Versiones: Actúan como máquinas del tiempo para tu código. Te permiten viajar a través de las diferentes versiones de tu proyecto, colaborar con otros y evitar desastres.
+            <br>
+            3.-Depuradores: Son como detectores de mentiras para tu código. Te ayudan a encontrar y corregir errores, incluso los más escurridizos.
+            <br>
+            4.-Analizadores de Código: Funcionan como revisores de calidad automáticos. Examinan tu código en busca de problemas potenciales y te sugieren mejoras.
+            <br>
+            5.-Herramientas de Automatización: Son como robots asistentes que se encargan de tareas repetitivas, liberándote para que te enfoques en la parte creativa.
+            <br>
+            6.-Plataformas de Colaboración: Actúan como salas de reuniones virtuales donde los equipos pueden trabajar juntos sin importar dónde se encuentren.</p>
+        <img src="herramientas.jpg" alt="Herramientas de Desarrollo">
+    </div>
+
+<script>
+    function toggleNavbar() {
+        const navbarMenu = document.querySelector('.navbar-menu');
+        navbarMenu.classList.toggle('active');
+    }
+
+    // Cerrar el menú cuando se hace clic fuera de él
+    document.addEventListener('click', function(event) {
+        const navbarMenu = document.querySelector('.navbar-menu');
+        const navbarToggle = document.querySelector('.navbar-toggle');
+        
+        if (!navbarToggle.contains(event.target) && !navbarMenu.contains(event.target)) {
+            navbarMenu.classList.remove('active');
+        }
+    });
+
+    // Prevenir que el clic en el toggle cierre inmediatamente el menú
+    document.querySelector('.navbar-toggle').addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+</script>
+
+<footer>
+    © Colegio De Estudios Cientificos y Tecnologicos del Estado de Mexico Plantel Almoloya de Juarez 2024
+    <div class="social-icons">
+        <a href="https://www.facebook.com/Cecytem.Almoloya" target="_blank"><i class="fab fa-facebook-f"></i> FACEBOOK</a>
+        <a href="https://x.com/somoscecytem" target="_blank"><i class="fab fa-x-twitter"></i> TWITTER</a>
+        <a href="https://www.instagram.com/somoscecytem/" target="_blank"><i class="fab fa-instagram"></i> INSTAGRAM</a>
+    </div>
+</footer>
+
+</body>
+</html>

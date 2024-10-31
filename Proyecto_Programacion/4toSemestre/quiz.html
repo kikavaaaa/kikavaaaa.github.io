@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Dice - Programación</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6f2cfb, #34d1bf);
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logo {
+            max-width: 150px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px;
+            max-width: 600px;
+        }
+
+        .game-button {
+            width: 150px;
+            height: 150px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            transition: opacity 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .html { background-color: #e44d26; }
+        .js { background-color: #f7df1e; color: black; }
+        .php { background-color: #777bb4; }
+        .css { background-color: #264de4; }
+
+        .game-button.active {
+            opacity: 1;
+            transform: scale(0.95);
+        }
+
+        .score {
+            font-size: 24px;
+            margin: 20px 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+
+        .start-btn {
+            background: #34d1bf;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 209, 191, 0.4);
+        }
+
+        .start-btn:hover {
+            background: #2cbba5;
+            transform: translateY(-3px);
+        }
+
+        .message {
+            font-size: 20px;
+            margin: 20px 0;
+            text-align: center;
+            min-height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <img src="CecyLibro.gif" alt="Logo" class="logo">
+    <h1>Simon Dice - Temas de Programación</h1>
+    
+    <div class="score">Puntuación: <span id="score">0</span></div>
+    
+    <div class="game-container">
+        <button class="game-button html" data-color="html">HTML</button>
+        <button class="game-button js" data-color="js">JavaScript</button>
+        <button class="game-button php" data-color="php">PHP</button>
+        <button class="game-button css" data-color="css">CSS</button>
+    </div>
+
+    <div class="controls">
+        <button class="start-btn" onclick="startGame()">Iniciar Juego</button>
+    </div>
+
+    <div class="message" id="message"></div>
+
+    <script>
+        const buttons = document.querySelectorAll('.game-button');
+        const scoreElement = document.getElementById('score');
+        const messageElement = document.getElementById('message');
+        let sequence = [];
+        let playerSequence = [];
+        let score = 0;
+        let canClick = false;
+
+        const topics = {
+            html: [
+                "HTML es un lenguaje de marcado",
+                "Se usa para estructurar páginas web",
+                "Utiliza etiquetas para definir elementos",
+                "Es la base de toda página web"
+            ],
+            js: [
+                "JavaScript es un lenguaje de programación",
+                "Se ejecuta del lado del cliente",
+                "Permite crear interactividad en la web",
+                "Es orientado a objetos"
+            ],
+            php: [
+                "PHP se ejecuta en el servidor",
+                "Procesa formularios web",
+                "Permite conexiones a bases de datos",
+                "Es un lenguaje de código abierto"
+            ],
+            css: [
+                "CSS estiliza páginas web",
+                "Define el diseño visual",
+                "Controla el layout de la página",
+                "Permite animaciones web"
+            ]
+        };
+
+        function showMessage(text, duration = 2000) {
+            messageElement.textContent = text;
+            if (duration) {
+                setTimeout(() => {
+                    messageElement.textContent = '';
+                }, duration);
+            }
+        }
+
+        function activateButton(color) {
+            const button = document.querySelector(`[data-color="${color}"]`);
+            button.classList.add('active');
+            showMessage(topics[color][Math.floor(Math.random() * topics[color].length)]);
+            
+            setTimeout(() => {
+                button.classList.remove('active');
+            }, 500);
+        }
+
+        async function playSequence() {
+            canClick = false;
+            for (let color of sequence) {
+                await new Promise(resolve => setTimeout(resolve, 800));
+                activateButton(color);
+            }
+            canClick = true;
+            showMessage('¡Tu turno!');
+        }
+
+        function startGame() {
+            sequence = [];
+            playerSequence = [];
+            score = 0;
+            scoreElement.textContent = score;
+            nextRound();
+        }
+
+        function nextRound() {
+            const colors = ['html', 'js', 'php', 'css'];
+            sequence.push(colors[Math.floor(Math.random() * colors.length)]);
+            playerSequence = [];
+            showMessage('¡Observa la secuencia!', 1500);
+            setTimeout(() => {
+                playSequence();
+            }, 1500);
+        }
+
+        function checkSequence() {
+            const lastIndex = playerSequence.length - 1;
+            if (playerSequence[lastIndex] !== sequence[lastIndex]) {
+                showMessage('¡Game Over! Presiona Iniciar para jugar de nuevo');
+                canClick = false;
+                return;
+            }
+            
+            if (playerSequence.length === sequence.length) {
+                score += 10;
+                scoreElement.textContent = score;
+                playerSequence = [];
+                showMessage('¡Correcto! Siguiente nivel...', 1500);
+                setTimeout(nextRound, 1500);
+            }
+        }
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (!canClick) return;
+                
+                const color = button.dataset.color;
+                activateButton(color);
+                playerSequence.push(color);
+                checkSequence();
+            });
+        });
+    </script>
+</body>
+</html>
